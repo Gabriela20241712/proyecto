@@ -17,7 +17,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 # Configuración inicial de la aplicación
 st.title("Herramienta de análisis de datos y modelos de regresión")
 st.subheader("Explora, analiza y aplica modelos de regresión a tus datos de manera sencilla")
-st.sidebar.header("Menú")
+#st.sidebar.header("Menú")
 
 # Función para cargar datasets desde Kaggle
 def cargar_dataset_kaggle():
