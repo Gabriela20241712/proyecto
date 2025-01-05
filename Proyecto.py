@@ -352,14 +352,10 @@ if st.session_state['view'] == 'menu':
 
 if st.session_state['view'] == 'analisis' or st.session_state['view'] in ['eda', 'regresion', 'informe']:
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
-    opcion = st.sidebar.selectbox("Seleccione una opción de análisis", opciones, key="main_option")
-
-    if opcion == "EDA":
-        st.session_state['view'] = 'eda'
-    elif opcion == "Regresión":
-        st.session_state['view'] = 'regresion'
-    elif opcion == "Generar Informe Ejecutivo":
-        st.session_state['view'] = 'informe'
+    cols = st.columns(len(opciones))
+    for col, opcion in zip(cols, opciones):
+        if col.button(opcion):
+            st.session_state['view'] = opcion.lower()
 
 if st.session_state['view'] == 'eda':
     realizar_eda(st.session_state['data'])
