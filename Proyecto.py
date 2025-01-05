@@ -318,8 +318,8 @@ if 'view' not in st.session_state:
 
 if st.session_state['view'] == 'menu':
     if 'data' not in st.session_state:
-        #menu_opciones = ["Cargar Dataset Kaggle"]
-        #opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
+        menu_opciones = ["Cargar Dataset Kaggle"]
+        opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
 
         if opcion == "Cargar Dataset Kaggle":
             cargar_dataset_kaggle()
