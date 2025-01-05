@@ -66,7 +66,7 @@ def cargar_dataset_kaggle():
                             st.session_state['data_loaded'] = True
                             st.success("Dataset cargado exitosamente.")
                             st.session_state['view'] = 'analisis'
-                            st.experimental_rerun()
+                            st.experimental_set_query_params()
                 else:
                     st.error("Archivo CSV no encontrado.")
             except ApiException as e:
@@ -80,7 +80,7 @@ def mostrar_opciones_analisis():
     for opcion in opciones:
         if st.button(opcion):
             st.session_state['view'] = opcion.lower()
-            st.experimental_rerun()
+            st.experimental_set_query_params()
 
     if st.session_state['view'] == 'eda':
         realizar_eda(st.session_state['data'])
