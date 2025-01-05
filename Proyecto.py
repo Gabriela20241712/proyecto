@@ -17,20 +17,19 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 # Configuración inicial
 st.title("Herramienta de análisis de datos y modelos de regresión")
 st.subheader("Explora, analiza y aplica modelos de regresión a tus datos de manera sencilla")
-st.sidebar.header("Menú")
 
 # Función para cargar datasets desde Kaggle
 def cargar_dataset_kaggle():
-    st.sidebar.subheader("Importar Dataset desde Kaggle")
-    st.sidebar.write("Ingrese sus credenciales de Kaggle:")
-    kaggle_username = st.sidebar.text_input("Nombre de usuario de Kaggle", "")
-    kaggle_key = st.sidebar.text_input("Clave API de Kaggle", "", type="password")
+    st.subheader("Importar Dataset desde Kaggle")
+    st.write("Ingrese sus credenciales de Kaggle:")
+    kaggle_username = st.text_input("Nombre de usuario de Kaggle", "")
+    kaggle_key = st.text_input("Clave API de Kaggle", "", type="password")
     
-    st.sidebar.write("Para obtener el enlace del dataset, accede a Kaggle, elige un dataset, y copia la URL desde el navegador.")
-    st.sidebar.write("Ejemplo de enlace correcto: https://www.kaggle.com/dataset-owner/dataset-name")
-    dataset_url = st.sidebar.text_input("Enlace del dataset (Kaggle)", "")
+    st.write("Para obtener el enlace del dataset, accede a Kaggle, elige un dataset, y copia la URL desde el navegador.")
+    st.write("Ejemplo de enlace correcto: https://www.kaggle.com/dataset-owner/dataset-name")
+    dataset_url = st.text_input("Enlace del dataset (Kaggle)", "")
 
-    if st.sidebar.button("Cargar Dataset desde Kaggle"):
+    if st.button("Cargar Dataset desde Kaggle"):
         if not kaggle_username or not kaggle_key or not dataset_url:
             st.error("Por favor, complete todos los campos.")
         else:
@@ -77,10 +76,10 @@ def cargar_dataset_kaggle():
 
 # Función para cargar datasets desde un archivo CSV
 def cargar_dataset_csv():
-    st.sidebar.subheader("Importar Dataset desde un archivo CSV")
-    uploaded_file = st.sidebar.file_uploader("Elige un archivo CSV", type="csv")
+    st.subheader("Importar Dataset desde un archivo CSV")
+    uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
 
-    if st.sidebar.button("Cargar Dataset desde CSV"):
+    if st.button("Cargar Dataset desde CSV"):
         if uploaded_file is not None:
             try:
                 with st.spinner('Cargando dataset...'):
@@ -341,25 +340,22 @@ if 'view' not in st.session_state:
 if st.session_state['view'] == 'menu':
     if 'data' not in st.session_state:
         menu_opciones = ["Cargar Dataset Kaggle", "Cargar Dataset CSV"]
-        opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
-
-        if opcion == "Cargar Dataset Kaggle":
-            cargar_dataset_kaggle()
-        elif opcion == "Cargar Dataset CSV":
-            cargar_dataset_csv()
+        cols = st.columns(len(menu_opciones))
+        for col, opcion in zip(cols, menu_opciones):
+            if col.button(opcion):
+                if opcion == "Cargar Dataset Kaggle":
+                    cargar_dataset_kaggle()
+                elif opcion == "Cargar Dataset CSV":
+                    cargar_dataset_csv()
     else:
         st.session_state['view'] = 'analisis'
 
 if st.session_state['view'] == 'analisis' or st.session_state['view'] in ['eda', 'regresion', 'informe']:
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
-    opcion = st.sidebar.selectbox("Seleccione una opción de análisis", opciones, key="main_option")
-
-    if opcion == "EDA":
-        st.session_state['view'] = 'eda'
-    elif opcion == "Regresión":
-        st.session_state['view'] = 'regresion'
-    elif opcion == "Generar Informe Ejecutivo":
-        st.session_state['view'] = 'informe'
+    cols = st.columns(len(opciones))
+    for col, opcion in zip(cols, opciones):
+        if col.button(opcion):
+            st.session_state['view'] = opcion.lower()
 
 if st.session_state['view'] == 'eda':
     realizar_eda(st.session_state['data'])
