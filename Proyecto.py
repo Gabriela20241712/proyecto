@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 import os
 import io
 import json
-import kaggle
+#import kaggle
 import tempfile
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from kaggle.api.kaggle_api_extended import KaggleApi
-from kaggle.rest import ApiException
+#from kaggle.api.kaggle_api_extended import KaggleApi
+#from kaggle.rest import ApiException
 from fpdf import FPDF
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
@@ -54,8 +54,8 @@ def cargar_dataset_kaggle():
                 os.chmod(kaggle_json_path, 0o600)
 
                 # Configuración de la API de Kaggle
-                api = KaggleApi()
-                api.authenticate()
+                #api = KaggleApi()
+                #api.authenticate()
 
                 st.success("Conexión exitosa a Kaggle.")
 
@@ -64,7 +64,7 @@ def cargar_dataset_kaggle():
                 with st.spinner('Descargando dataset...'):
                     progress_bar = st.progress(0)
                     for i in range(100):
-                        api.dataset_download_files(dataset_info, path=".", unzip=True)
+                        #api.dataset_download_files(dataset_info, path=".", unzip=True)
                         progress_bar.progress(i + 1)
                 st.success("Dataset descargado exitosamente.")
                 
@@ -85,9 +85,7 @@ def cargar_dataset_kaggle():
                             break
                 else:
                     st.error("Archivo CSV no encontrado.")
-            except ApiException as e:
-                st.error(f"Error al descargar el dataset: {e}")
-            except Exception as e:
+            except Exception as e:  # ApiException as e:
                 st.error(f"Error al descargar el dataset: {e}")
 
 # Función para cargar datasets desde un archivo CSV
@@ -168,7 +166,7 @@ def aplicar_modelo_regresion(data):
     st.write("En esta sección puedes construir un modelo de regresión lineal para analizar tus datos.")
     st.write("Podrás observar los coeficientes del modelo, que indican la influencia de cada variable predictora en la variable objetivo.")
     st.write("También se calculan métricas como el Error Cuadrático Medio (MSE) para medir la precisión y el Coeficiente de Determinación (R^2) para evaluar la calidad del ajuste del modelo.")
-
+    
     columnas_validas = validar_columnas_para_regresion(data)
     st.write("Columnas válidas para regresión:")
     st.write(columnas_validas)
