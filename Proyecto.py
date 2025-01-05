@@ -311,7 +311,7 @@ def crear_informe_ejecutivo(data, results):
         pdf_filename = temp_file.name
 
     # Leer el archivo temporal y guardarlo en un buffer de bytes
-    with open(pdf_filename, "rb") as f:
+    with open(pdf_filename, "rb") as f):
         pdf_buffer = io.BytesIO(f.read())
 
     # Eliminar el archivo temporal
@@ -337,20 +337,22 @@ def crear_informe_ejecutivo(data, results):
 if 'view' not in st.session_state:
     st.session_state['view'] = 'menu'
 
+# Mostrar las opciones del menú principal en columnas
 if st.session_state['view'] == 'menu':
     if 'data' not in st.session_state:
         menu_opciones = ["Cargar Dataset Kaggle", "Cargar Dataset CSV"]
         cols = st.columns(len(menu_opciones))
         for col, opcion in zip(cols, menu_opciones):
             if col.button(opcion):
-                if opcion == "Cargar Dataset Kaggle":
-                    cargar_dataset_kaggle()
-                elif opcion == "Cargar Dataset CSV":
-                    cargar_dataset_csv()
+                st.session_state['view'] = opcion.lower().replace(" ", "_")
     else:
         st.session_state['view'] = 'analisis'
 
-if st.session_state['view'] == 'analisis' or st.session_state['view'] in ['eda', 'regresion', 'informe']:
+if st.session_state['view'] == 'cargar_dataset_kaggle':
+    cargar_dataset_kaggle()
+elif st.session_state['view'] == 'cargar_dataset_csv':
+    cargar_dataset_csv()
+elif st.session_state['view'] == 'analisis' or st.session_state['view'] in ['eda', 'regresion', 'informe']:
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
     cols = st.columns(len(opciones))
     for col, opcion in zip(cols, opciones):
