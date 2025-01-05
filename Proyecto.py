@@ -316,13 +316,13 @@ def crear_informe_ejecutivo(data, results):
 if 'view' not in st.session_state:
     st.session_state['view'] = 'menu'
 
-#if st.session_state['view'] == 'menu':
- #   if 'data' not in st.session_state:
-  #      menu_opciones = ["Cargar Dataset Kaggle"]
-   #     opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
+if st.session_state['view'] == 'menu':
+    if 'data' not in st.session_state:
+        menu_opciones = ["Cargar Dataset Kaggle"]
+        #opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
 
-    #    if opcion == "Cargar Dataset Kaggle":
-     #       cargar_dataset_kaggle()
+        if opcion == "Cargar Dataset Kaggle":
+            cargar_dataset_kaggle()
     else:
         st.session_state['view'] = 'analisis'
 
