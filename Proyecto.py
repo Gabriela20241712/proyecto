@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import os
 import io
 import json
-import kaggle
 import tempfile
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -50,9 +49,8 @@ def cargar_dataset_kaggle():
                 dataset_info = "/".join(dataset_url.split('/')[-2:])
                 with st.spinner('Descargando dataset...'):
                     progress_bar = st.progress(0)
-                    for i in range(100):
-                        api.dataset_download_files(dataset_info, path=".", unzip=True)
-                        progress_bar.progress(i + 1)
+                    api.dataset_download_files(dataset_info, path=".", unzip=True)
+                    progress_bar.progress(100)
                 st.success("Dataset descargado exitosamente.")
                 
                 # Mostrar lista de archivos descargados para verificar el nombre correcto
