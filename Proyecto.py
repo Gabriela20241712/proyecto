@@ -266,7 +266,7 @@ def crear_informe_ejecutivo(data, results):
     # Estadísticas descriptivas
     pdf.cell(200, 10, txt="Estadísticas descriptivas:", ln=True)
     pdf.ln(5)
-    for col, val in data.describe().iterrows()):
+    for col, val in data.describe().iterrows():
         pdf.multi_cell(0, 10, txt=f"{col}: {val.values}")
     pdf.ln(10)
 
