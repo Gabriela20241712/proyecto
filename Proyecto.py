@@ -310,40 +310,19 @@ def crear_informe_ejecutivo(data, results):
     st.success("Informe ejecutivo creado y listo para descargar.")
     
     # Mostrar el enlace de descarga en Streamlit
-    download_button = st.download_button(
+    st.download_button(
         label="Descargar Informe Ejecutivo",
         data=pdf_buffer,
         file_name="informe_ejecutivo.pdf",
         mime="application/pdf"
     )
-    
-    if download_button:
-        if st.button("Generar Informe Ejecutivo", key="generar_informe"):
-            results = {
-                "MSE": st.session_state.get("mse"),
-                "R2": st.session_state.get("r2"),
-                "Coeficientes": st.session_state.get("coef_df")
-            }
-            crear_informe_ejecutivo(st.session_state['data'], results)
 
 # Flujo principal de la aplicación
 if 'view' not in st.session_state:
-    st.session_state['view'] = 'menu'
+    st.session_state['view'] = 'cargar_dataset_kaggle'
 
-# Mostrar las opciones del menú principal en columnas
-if st.session_state['view'] == 'menu':
-    if 'data' not in st.session_state:
-        menu_opciones = ["Cargar Dataset Kaggle"]
-        cols = st.columns(len(menu_opciones))
-        for col, opcion in zip(cols, menu_opciones):
-            if col.button(opcion):
-                st.session_state['view'] = opcion.lower().replace(" ", "_")
-    else:
-        st.session_state['view'] = 'analisis'
-
+# Mostrar las opciones en la pantalla principal
 if st.session_state['view'] == 'cargar_dataset_kaggle':
     cargar_dataset_kaggle()
 elif st.session_state['view'] == 'analisis':
-    mostrar_opciones_analisis()
-elif st.session_state['view'] in ['eda', 'regresion', 'informe']:
     mostrar_opciones_analisis()
