@@ -65,10 +65,8 @@ def cargar_dataset_kaggle():
                             st.session_state['data'] = data
                             st.session_state['data_loaded'] = True
                             st.success("Dataset cargado exitosamente.")
-                            if st.button("OK", key="kaggle_ok"):
-                                st.session_state['view'] = 'analisis'
-                                mostrar_opciones_analisis()
-                            break
+                            st.session_state['view'] = 'analisis'
+                            st.experimental_rerun()
                 else:
                     st.error("Archivo CSV no encontrado.")
             except ApiException as e:
@@ -78,11 +76,11 @@ def cargar_dataset_kaggle():
 
 # Función para mostrar las opciones de análisis
 def mostrar_opciones_analisis():
-    # Asegurar que las opciones de análisis se muestren inmediatamente después de hacer clic en el botón OK
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
     for opcion in opciones:
         if st.button(opcion):
             st.session_state['view'] = opcion.lower()
+            st.experimental_rerun()
 
     if st.session_state['view'] == 'eda':
         realizar_eda(st.session_state['data'])
@@ -325,4 +323,6 @@ if 'view' not in st.session_state:
 if st.session_state['view'] == 'cargar_dataset_kaggle':
     cargar_dataset_kaggle()
 elif st.session_state['view'] == 'analisis':
+    mostrar_opciones_analisis()
+elif st.session_state['view'] in ['eda', 'regresion', 'informe']:
     mostrar_opciones_analisis()
