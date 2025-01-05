@@ -98,6 +98,13 @@ def cargar_dataset_csv():
         else:
             st.error("Por favor, suba un archivo CSV.")
 
+def mostrar_opciones_analisis():
+    opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
+    cols = st.columns(len(opciones))
+    for col, opcion in zip(cols, opciones):
+        if col.button(opcion):
+            st.session_state['view'] = opcion.lower()
+
 # Función para realizar EDA
 def realizar_eda(data):
     st.subheader("Análisis Exploratorio de Datos (EDA)")
@@ -354,26 +361,22 @@ if st.session_state['view'] == 'cargar_dataset_kaggle':
     cargar_dataset_kaggle()
 elif st.session_state['view'] == 'cargar_dataset_csv':
     cargar_dataset_csv()
-elif st.session_state['view'] == 'analisis' or st.session_state['view'] in ['eda', 'regresion', 'informe']:
-    opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
-    cols = st.columns(len(opciones))
-    for col, opcion in zip(cols, opciones):
-        if col.button(opcion):
-            st.session_state['view'] = opcion.lower()
-
-if st.session_state['view'] == 'eda':
-    realizar_eda(st.session_state['data'])
-elif st.session_state['view'] == 'regresion':
-    aplicar_modelo_regresion(st.session_state['data'])
-elif st.session_state['view'] == 'informe':
-    if st.button("Generar Informe Ejecutivo", key="generar_informe"):
-        results = {
-            "MSE": st.session_state.get("mse"),
-            "R2": st.session_state.get("r2"),
-            "Coeficientes": st.session_state.get("coef_df")
-        }
-        crear_informe_ejecutivo(st.session_state['data'], results)
-    if st.button("Volver al Menú Principal", key="volver_menu"):
-        if 'data' in st.session_state:
-            del st.session_state['data']
-        st.session_state['view'] = 'menu'
+elif st.session_state['view'] == 'analisis':
+    mostrar_opciones_analisis()
+elif st.session_state['view'] in ['eda', 'regresion', 'informe']:
+    if st.session_state['view'] == 'eda':
+        realizar_eda(st.session_state['data'])
+    elif st.session_state['view'] == 'regresion':
+        aplicar_modelo_regresion(st.session_state['data'])
+    elif st.session_state['view'] == 'informe':
+        if st.button("Generar Informe Ejecutivo", key="generar_informe"):
+            results = {
+                "MSE": st.session_state.get("mse"),
+                "R2": st.session_state.get("r2"),
+                "Coeficientes": st.session_state.get("coef_df")
+            }
+            crear_informe_ejecutivo(st.session_state['data'], results)
+        if st.button("Volver al Menú Principal", key="volver_menu"):
+            if 'data' in st.session_state:
+                del st.session_state['data']
+            st.session_state['view'] = 'menu'
