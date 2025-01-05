@@ -66,8 +66,7 @@ def cargar_dataset_kaggle():
                             st.session_state['data'] = data
                             st.session_state['data_loaded'] = True
                             st.success("Dataset cargado exitosamente.")
-                            st.button("OK", key="kaggle_ok")
-                            break
+                            st.experimental_rerun()
                 else:
                     st.error("Archivo CSV no encontrado.")
             except ApiException as e:
@@ -314,19 +313,12 @@ def crear_informe_ejecutivo(data, results):
 
 # Flujo principal de la aplicación
 if 'view' not in st.session_state:
-    st.session_state['view'] = 'menu'
+    st.session_state['view'] = 'cargar_dataset_kaggle'
 
-if st.session_state['view'] == 'menu':
-    if 'data' not in st.session_state:
-        menu_opciones = ["Cargar Dataset Kaggle"]
-        opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
-
-        if opcion == "Cargar Dataset Kaggle":
-            cargar_dataset_kaggle()
-    else:
-        st.session_state['view'] = 'analisis'
-
-if st.session_state['view'] == 'analisis' or st.session_state['view'] in ['eda', 'regresion', 'informe']:
+# Mostrar las opciones en la pantalla principal
+if st.session_state['view'] == 'cargar_dataset_kaggle':
+    cargar_dataset_kaggle()
+elif st.session_state['view'] == 'analisis':
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
     opcion = st.sidebar.selectbox("Seleccione una opción de análisis", opciones, key="main_option")
 
