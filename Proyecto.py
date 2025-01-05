@@ -14,7 +14,7 @@ from kaggle.rest import ApiException
 from fpdf import FPDF
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-# Configuración inicial
+# Configuración inicial de la aplicación
 st.title("Herramienta de análisis de datos y modelos de regresión")
 st.subheader("Explora, analiza y aplica modelos de regresión a tus datos de manera sencilla")
 st.sidebar.header("Menú")
@@ -74,28 +74,6 @@ def cargar_dataset_kaggle():
                 st.error(f"Error al descargar el dataset: {e}")
             except Exception as e:
                 st.error(f"Error al descargar el dataset: {e}")
-
-# Función para cargar datasets desde un archivo CSV
-def cargar_dataset_csv():
-    st.sidebar.subheader("Importar Dataset desde un archivo CSV")
-    uploaded_file = st.sidebar.file_uploader("Elige un archivo CSV", type="csv")
-
-    if st.sidebar.button("Cargar Dataset desde CSV"):
-        if uploaded_file is not None:
-            try:
-                with st.spinner('Cargando dataset...'):
-                    progress_bar = st.progress(0)
-                    data = pd.read_csv(uploaded_file)
-                    for percent_complete in range(100):
-                        progress_bar.progress(percent_complete + 1)
-                st.success("Dataset cargado exitosamente.")
-                st.button("OK", key="csv_ok")
-                st.session_state['data'] = data
-                st.session_state['data_loaded'] = True
-            except Exception as e:
-                st.error(f"Error al cargar el dataset: {e}")
-        else:
-            st.error("Por favor, suba un archivo CSV.")
 
 # Función para realizar EDA
 def realizar_eda(data):
@@ -340,13 +318,11 @@ if 'view' not in st.session_state:
 
 if st.session_state['view'] == 'menu':
     if 'data' not in st.session_state:
-        menu_opciones = ["Cargar Dataset Kaggle", "Cargar Dataset CSV"]
+        menu_opciones = ["Cargar Dataset Kaggle"]
         opcion = st.sidebar.selectbox("Seleccione una opción", menu_opciones)
 
         if opcion == "Cargar Dataset Kaggle":
             cargar_dataset_kaggle()
-        elif opcion == "Cargar Dataset CSV":
-            cargar_dataset_csv()
     else:
         st.session_state['view'] = 'analisis'
 
