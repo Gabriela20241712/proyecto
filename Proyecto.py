@@ -74,7 +74,7 @@ def cargar_dataset_kaggle():
                     if file_name.endswith(".csv"):
                         st.write(file_name)
                 
-                # Intentar leer el archivo CSV
+                        # Intentar leer el archivo CSV
                         dataset_path = os.path.join(".", file_name)
                         if os.path.exists(dataset_path):
                             data = pd.read_csv(dataset_path)
@@ -168,7 +168,7 @@ def aplicar_modelo_regresion(data):
     st.write("En esta sección puedes construir un modelo de regresión lineal para analizar tus datos.")
     st.write("Podrás observar los coeficientes del modelo, que indican la influencia de cada variable predictora en la variable objetivo.")
     st.write("También se calculan métricas como el Error Cuadrático Medio (MSE) para medir la precisión y el Coeficiente de Determinación (R^2) para evaluar la calidad del ajuste del modelo.")
-    
+
     columnas_validas = validar_columnas_para_regresion(data)
     st.write("Columnas válidas para regresión:")
     st.write(columnas_validas)
@@ -219,7 +219,7 @@ def aplicar_modelo_regresion(data):
                 mse = mean_squared_error(y_test, y_pred)
                 r2 = r2_score(y_test, y_pred)
 
-                #Coeficientes del modelo
+                # Coeficientes del modelo
                 coef_df = pd.DataFrame({"Variable": features, "Coeficiente": modelo.coef_})
                 
                 # Guardar resultados en session_state
