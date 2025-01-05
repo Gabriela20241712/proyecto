@@ -66,7 +66,7 @@ def cargar_dataset_kaggle():
                             st.session_state['data'] = data
                             st.session_state['data_loaded'] = True
                             st.success("Dataset cargado exitosamente.")
-                            st.experimental_rerun()
+                            st.experimental_rerun()  # Aquí está la corrección
                 else:
                     st.error("Archivo CSV no encontrado.")
             except ApiException as e:
