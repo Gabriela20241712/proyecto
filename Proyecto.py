@@ -78,11 +78,23 @@ def cargar_dataset_kaggle():
 
 # Función para mostrar las opciones de análisis
 def mostrar_opciones_analisis():
+    # Asegurar que las opciones de análisis se muestren inmediatamente después de hacer clic en el botón OK
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
-    cols = st.columns(len(opciones))
-    for col, opcion in zip(cols, opciones):
-        if col.button(opcion):
+    for opcion in opciones:
+        if st.button(opcion):
             st.session_state['view'] = opcion.lower()
+
+    if st.session_state['view'] == 'eda':
+        realizar_eda(st.session_state['data'])
+    elif st.session_state['view'] == 'regresion':
+        aplicar_modelo_regresion(st.session_state['data'])
+    elif st.session_state['view'] == 'informe':
+        results = {
+            "MSE": st.session_state.get("mse"),
+            "R2": st.session_state.get("r2"),
+            "Coeficientes": st.session_state.get("coef_df")
+        }
+        crear_informe_ejecutivo(st.session_state['data'], results)
 
 # Función para realizar el análisis exploratorio de datos (EDA)
 def realizar_eda(data):
@@ -334,15 +346,4 @@ if st.session_state['view'] == 'cargar_dataset_kaggle':
 elif st.session_state['view'] == 'analisis':
     mostrar_opciones_analisis()
 elif st.session_state['view'] in ['eda', 'regresion', 'informe']:
-    if st.session_state['view'] == 'eda':
-        realizar_eda(st.session_state['data'])
-    elif st.session_state['view'] == 'regresion':
-        aplicar_modelo_regresion(st.session_state['data'])
-    elif st.session_state['view'] == 'informe':
-        if st.button("Generar Informe Ejecutivo", key="generar_informe"):
-            results = {
-                "MSE": st.session_state.get("mse"),
-                "R2": st.session_state.get("r2"),
-                "Coeficientes": st.session_state.get("coef_df")
-            }
-            crear_informe_ejecutivo(st.session_state['data'], results)
+    mostrar_opciones_analisis()
