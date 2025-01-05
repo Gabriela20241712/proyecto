@@ -65,7 +65,8 @@ def cargar_dataset_kaggle():
                             st.session_state['data'] = data
                             st.session_state['data_loaded'] = True
                             st.success("Dataset cargado exitosamente.")
-                            st.button("OK", key="kaggle_ok")
+                            if st.button("OK", key="kaggle_ok"):
+                                st.session_state['view'] = 'analisis'
                             break
                 else:
                     st.error("Archivo CSV no encontrado.")
@@ -88,9 +89,10 @@ def cargar_dataset_csv():
                     for percent_complete in range(100):
                         progress_bar.progress(percent_complete + 1)
                 st.success("Dataset cargado exitosamente.")
-                st.button("OK", key="csv_ok")
-                st.session_state['data'] = data
-                st.session_state['data_loaded'] = True
+                if st.button("OK", key="csv_ok"):
+                    st.session_state['data'] = data
+                    st.session_state['data_loaded'] = True
+                    st.session_state['view'] = 'analisis'
             except Exception as e:
                 st.error(f"Error al cargar el dataset: {e}")
         else:
