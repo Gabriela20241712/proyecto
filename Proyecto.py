@@ -14,7 +14,7 @@ from kaggle.rest import ApiException
 from fpdf import FPDF
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-# Configuración inicial
+# Configuración inicial de la aplicación
 st.title("Herramienta de análisis de datos y modelos de regresión")
 st.subheader("Explora, analiza y aplica modelos de regresión a tus datos de manera sencilla")
 
@@ -67,6 +67,7 @@ def cargar_dataset_kaggle():
                             st.success("Dataset cargado exitosamente.")
                             if st.button("OK", key="kaggle_ok"):
                                 st.session_state['view'] = 'analisis'
+                                mostrar_opciones_analisis()
                             break
                 else:
                     st.error("Archivo CSV no encontrado.")
@@ -75,29 +76,7 @@ def cargar_dataset_kaggle():
             except Exception as e:
                 st.error(f"Error al descargar el dataset: {e}")
 
-# Función para cargar datasets desde un archivo CSV
-def cargar_dataset_csv():
-    st.subheader("Importar Dataset desde un archivo CSV")
-    uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
-
-    if st.button("Cargar Dataset desde CSV"):
-        if uploaded_file is not None:
-            try:
-                with st.spinner('Cargando dataset...'):
-                    progress_bar = st.progress(0)
-                    data = pd.read_csv(uploaded_file)
-                    for percent_complete in range(100):
-                        progress_bar.progress(percent_complete + 1)
-                st.success("Dataset cargado exitosamente.")
-                if st.button("OK", key="csv_ok"):
-                    st.session_state['data'] = data
-                    st.session_state['data_loaded'] = True
-                    st.session_state['view'] = 'analisis'
-            except Exception as e:
-                st.error(f"Error al cargar el dataset: {e}")
-        else:
-            st.error("Por favor, suba un archivo CSV.")
-
+# Función para mostrar las opciones de análisis
 def mostrar_opciones_analisis():
     opciones = ["EDA", "Regresión", "Generar Informe Ejecutivo"]
     cols = st.columns(len(opciones))
@@ -105,7 +84,7 @@ def mostrar_opciones_analisis():
         if col.button(opcion):
             st.session_state['view'] = opcion.lower()
 
-# Función para realizar EDA
+# Función para realizar el análisis exploratorio de datos (EDA)
 def realizar_eda(data):
     st.subheader("Análisis Exploratorio de Datos (EDA)")
     st.write("En esta sección puedes explorar tus datos cargados. Aquí puedes visualizar las primeras filas, estadísticas descriptivas y relaciones entre variables.")
@@ -141,11 +120,6 @@ def realizar_eda(data):
         except Exception as e:
             st.error(f"Error al mostrar la correlación: {e}")
 
-    if st.button("Volver al Menú Principal", key="eda_volver"):
-        if 'data' in st.session_state:
-            del st.session_state['data']
-        st.session_state['view'] = 'menu'
-
 # Función para validar columnas para regresión
 def validar_columnas_para_regresion(data):
     columnas_validas = []
@@ -155,7 +129,7 @@ def validar_columnas_para_regresion(data):
                 columnas_validas.append(column)
     return columnas_validas
 
-# Función para realizar regresión
+# Función para aplicar el modelo de regresión
 def aplicar_modelo_regresion(data):
     st.subheader("Aplicación de Modelo de Regresión")
     st.write("En esta sección puedes construir un modelo de regresión lineal para analizar tus datos.")
@@ -234,11 +208,6 @@ def aplicar_modelo_regresion(data):
                 
             except Exception as e:
                 st.error(f"Error al entrenar o evaluar el modelo: {e}")
-
-    if st.button("Volver al Menú Principal", key="regresion_volver"):
-        if 'data' in st.session_state:
-            del st.session_state['data']
-        st.session_state['view'] = 'menu'
 
 # Función para crear y exportar informe ejecutivo
 def crear_informe_ejecutivo(data, results):
@@ -337,10 +306,13 @@ def crear_informe_ejecutivo(data, results):
     )
     
     if download_button:
-        if st.button("Volver al Menú Principal", key="informe_volver"):
-            if 'data' in st.session_state:
-                del st.session_state['data']
-            st.session_state['view'] = 'menu'
+        if st.button("Generar Informe Ejecutivo", key="generar_informe"):
+            results = {
+                "MSE": st.session_state.get("mse"),
+                "R2": st.session_state.get("r2"),
+                "Coeficientes": st.session_state.get("coef_df")
+            }
+            crear_informe_ejecutivo(st.session_state['data'], results)
 
 # Flujo principal de la aplicación
 if 'view' not in st.session_state:
@@ -349,7 +321,7 @@ if 'view' not in st.session_state:
 # Mostrar las opciones del menú principal en columnas
 if st.session_state['view'] == 'menu':
     if 'data' not in st.session_state:
-        menu_opciones = ["Cargar Dataset Kaggle", "Cargar Dataset CSV"]
+        menu_opciones = ["Cargar Dataset Kaggle"]
         cols = st.columns(len(menu_opciones))
         for col, opcion in zip(cols, menu_opciones):
             if col.button(opcion):
@@ -359,8 +331,6 @@ if st.session_state['view'] == 'menu':
 
 if st.session_state['view'] == 'cargar_dataset_kaggle':
     cargar_dataset_kaggle()
-elif st.session_state['view'] == 'cargar_dataset_csv':
-    cargar_dataset_csv()
 elif st.session_state['view'] == 'analisis':
     mostrar_opciones_analisis()
 elif st.session_state['view'] in ['eda', 'regresion', 'informe']:
@@ -376,7 +346,3 @@ elif st.session_state['view'] in ['eda', 'regresion', 'informe']:
                 "Coeficientes": st.session_state.get("coef_df")
             }
             crear_informe_ejecutivo(st.session_state['data'], results)
-        if st.button("Volver al Menú Principal", key="volver_menu"):
-            if 'data' in st.session_state:
-                del st.session_state['data']
-            st.session_state['view'] = 'menu'
