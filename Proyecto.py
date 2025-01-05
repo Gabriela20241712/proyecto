@@ -36,22 +36,9 @@ def cargar_dataset_kaggle():
             st.error("Por favor, complete todos los campos.")
         else:
             try:
-                # Crear la carpeta .kaggle si no existe
-                kaggle_dir = os.path.join(os.path.expanduser("~"), ".kaggle")
-                if not os.path.exists(kaggle_dir):
-                    os.makedirs(kaggle_dir)
-
-                # Crear el archivo kaggle.json con las credenciales
-                kaggle_json_path = os.path.join(kaggle_dir, "kaggle.json")
-                kaggle_json_content = {
-                    "username": kaggle_username,
-                    "key": kaggle_key
-                }
-                with open(kaggle_json_path, "w") as f:
-                    json.dump(kaggle_json_content, f)
-
-                # Establecer permisos correctos al archivo kaggle.json
-                os.chmod(kaggle_json_path, 0o600)
+                # Configuración de las credenciales de Kaggle
+                os.environ['KAGGLE_USERNAME'] = kaggle_username
+                os.environ['KAGGLE_KEY'] = kaggle_key
 
                 # Configuración de la API de Kaggle
                 api = KaggleApi()
